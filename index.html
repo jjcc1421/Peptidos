@@ -35,7 +35,7 @@
           let strAccumulator = '';
           for (let i = 0; i < str.length; i++) {
             strAccumulator += str[i];
-            if (str[i] === separator || str[i] === separator.toUpperCase() ) {
+            if (str[i] === separator || str[i] === separator.toLowerCase() ) {
               arrayOfStrings.push(strAccumulator);
               strAccumulator = '';
             }
