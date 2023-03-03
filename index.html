@@ -35,7 +35,7 @@
           let strAccumulator = '';
           for (let i = 0; i < str.length; i++) {
             strAccumulator += str[i];
-            if (str[i] === separator) {
+            if (str[i] === separator || str[i] === separator.toUpperCase() ) {
               arrayOfStrings.push(strAccumulator);
               strAccumulator = '';
             }
@@ -45,7 +45,7 @@
           }
           return arrayOfStrings;
         }
-        let chains = splitString(this.input, 'R');
+        let chains = splitString(this.input, 'K');
         console.log(chains);
         chains.forEach((chain, index) => {
           const entry = chain;
