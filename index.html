@@ -70,7 +70,9 @@
       <!-- input type textarea -->
       <label for="input" class="block text-sm font-medium text-gray-700 pb-2">Ingrese la cadena</label>
       <textarea id="input"
-        class="w-full h-64 border border-gray-300 rounded-lg shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-4"
+      
+        class="w-full h-64 border border-gray-300 rounded-lg shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 p-4"
+        
         x-model="input">
       </textarea>
       <!-- textarea legth right -->
@@ -78,7 +80,7 @@
       <span class="text-sm font-normal text-gray-500 text-right" x-text="'longitud: ' + input.length"></span>
       <!-- button -->
       <button @click="calculateProteinsAndPeptides"
-        class="px-4 py-2 mt-4 font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200">
+        class="px-4 py-2 mt-4 font-medium text-white bg-green-600 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-green-200">
         Calcular
       </button>
       <!-- output peptides -->
@@ -136,10 +138,12 @@
           </ul>
         </div>
   </div>
-  <!-- Ingeniero Juan Caicedo, jefe del area de desarrollo e investigacion de tecnologias informaticas de Naturalcompany  -->
   <div class="mt-4">
     <p class="text-sm font-normal text-gray-500">
-      Ingeniero Juan Caicedo, jefe del area de desarrollo e investigacion de tecnologias informaticas de Naturalcompany
+      Ingeniero Juan Caicedo, Jefe del area de desarrollo e investigación de tecnologías informáticas de
+      <a href="https://naturalcompany.com.co" target="_blank" class="text-green-600 hover:text-green-500">
+        Natural Company
+      </a>
     </p>
   </div>
 </div>
