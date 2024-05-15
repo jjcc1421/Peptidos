@@ -35,6 +35,7 @@
       output: [],
       filterSize: 2,
       filteredOutput: [],
+      filteredOutputFormatted: '',
       init() {
         this.$watch('aminoAcids', (value) => {
           this.aminoAcidsArray = value.split(',');
@@ -42,9 +43,15 @@
         });
         this.$watch('output', (value) => {
           this.filteredOutput = value.filter((chain) => chain.chain.length >= this.filterSize);
+          this.filteredOutputFormatted = this.filteredOutput.map(({chain}) => {
+            return chain + ';' + chain.length
+          }).join('\n');
         });
         this.$watch('filterSize', (value) => {
           this.filteredOutput = this.output.filter((chain) => chain.chain.length >= value);
+          this.filteredOutputFormatted = this.filteredOutput.map(({chain}) => {
+            return chain + ';' + chain.length
+          }).join('\n');
         });
       },
       reset() {
@@ -163,18 +170,24 @@
               type="number"
             >
           </div>
-          <div class="w-full">
+          <div class="w-full pb-2">
             <template x-for="(chain, index) in filteredOutput" :key="index">
               <span class="break-all text-xs leading-5 font-semibold border-r-4 border-gray-300 px-2"
               :class="chain.type === 'protein' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'" x-text="chain.chain">
               </span>
             </template>
           </div>
+          <textarea 
+            id="input"
+            class="w-full mt-4 h-64 border border-gray-300 rounded-lg shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 p-4 text-xs"
+            x-model="filteredOutputFormatted"
+            disabled
+            >
         </div>
 
         <h2 class="text-lg font-medium text-gray-900">
           Peptidos 
-          <span class="text-sm font-normal text-gray-500" x-text="peptides.length">
+          <span class="text-sm font-normal text-gray-500" x-text="peptides.length"></span>
         </h2>
         <div class="mt-2">
           <ul class="border border-gray-200 rounded-lg divide-y divide-gray-200">
