@@ -33,10 +33,26 @@
       proteins: [],
       peptides: [],
       output: [],
+      filterSize: 2,
+      filteredOutput: [],
       init() {
         this.$watch('aminoAcids', (value) => {
           this.aminoAcidsArray = value.split(',');
           console.log('updated');
+        });
+        this.$watch('output', (value) => {
+          this.filteredOutput = value.filter((chain) => chain.chain.length >= this.filterSize);
+        });
+        this.$watch('maxSizes', (value) => {
+          this.filteredOutput = this.filteredOutput.filter((chain) => {
+            let valid = true;
+            for(let i = 0; i < this.aminoAcidsArray.length; i++) {
+              if(chain.chain.length >= value[i]) {
+                valid = false;
+              }
+            }
+            return valid;
+          });
         });
       },
       reset() {
@@ -131,8 +147,10 @@
       </button>
       <!-- output peptides -->
       <div class="mt-4">
-        <h2 class="text-lg font-medium text-gray-900">
-          Cadena 
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">
+            Cadena 
+          </h2>
           <div class="w-full">
             <template x-for="(chain, index) in output" :key="index">
               <span class="break-all text-xs leading-5 font-semibold border-r-4 border-gray-300 px-2"
@@ -140,6 +158,28 @@
               </span>
             </template>
           </div>
+        </div>
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">
+            Cadena Filtrada
+          </h2>
+          <div>
+            <input 
+              id="input"
+              class="border text-sm border-gray-300 rounded-lg shadow-sm focus:border-green-300 focus:ring focus:ring-green-200 focus:ring-opacity-50 p-1"
+              x-model="filterSize"
+              type="number"
+            >
+          </div>
+          <div class="w-full">
+            <template x-for="(chain, index) in filteredOutput" :key="index">
+              <span class="break-all text-xs leading-5 font-semibold border-r-4 border-gray-300 px-2"
+              :class="chain.type === 'protein' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'" x-text="chain.chain">
+              </span>
+            </template>
+          </div>
+        </div>
+
         <h2 class="text-lg font-medium text-gray-900">
           Peptidos 
           <span class="text-sm font-normal text-gray-500" x-text="peptides.length">
