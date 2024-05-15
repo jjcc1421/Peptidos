@@ -53,6 +53,12 @@
             return chain + ';' + chain.length
           }).join('\n');
         });
+
+        this.$watch('filteredOutput', (value) => {
+          this.filteredOutputFormatted = value.map(({chain}) => {
+            return chain + ';' + chain.length
+          }).join('\n');
+        });
       },
       reset() {
         this.proteins = [];
