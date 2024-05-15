@@ -43,16 +43,8 @@
         this.$watch('output', (value) => {
           this.filteredOutput = value.filter((chain) => chain.chain.length >= this.filterSize);
         });
-        this.$watch('maxSizes', (value) => {
-          this.filteredOutput = this.filteredOutput.filter((chain) => {
-            let valid = true;
-            for(let i = 0; i < this.aminoAcidsArray.length; i++) {
-              if(chain.chain.length >= value[i]) {
-                valid = false;
-              }
-            }
-            return valid;
-          });
+        this.$watch('filterSize', (value) => {
+          this.filteredOutput = this.output.filter((chain) => chain.chain.length >= value);
         });
       },
       reset() {
