@@ -61,21 +61,30 @@
           }
           return arrayOfStrings;
         }
-        this.aminoAcidsArray.forEach((aminoAcid, index) => {
-          let chains = splitString(this.input, aminoAcid);
-          console.log(chains);
-          chains.forEach((chain, index) => {
-            const entry = chain;
-            if(chain.length > this.maxSizes[index]) {
-              this.output.push({chain, type: 'protein'}); 
-              this.proteins.push(entry);
-            }
-            else{
-              this.output.push({chain, type: 'peptide'});
-              this.peptides.push(entry);
-            }
-          })
-        });
+
+        let chains = splitString(this.input, this.aminoAcidsArray[0]);
+        for(let i = 1; i < this.aminoAcidsArray.length; i++) {
+          let newChains = [];
+          chains.forEach((chain) => {
+            let newChainsAux = splitString(chain, this.aminoAcidsArray[i]);
+            newChains = newChains.concat(newChainsAux);
+          });
+          chains = newChains;
+        }
+        
+        console.log(chains);
+        chains.forEach((chain, index) => {
+          const entry = chain;
+          if(chain.length > 99) {
+            this.output.push({chain, type: 'protein'}); 
+            this.proteins.push(entry);
+          }
+          else{
+            this.output.push({chain, type: 'peptide'});
+            this.peptides.push(entry);
+          }
+        })
+        
       }
     }">
       <div>
