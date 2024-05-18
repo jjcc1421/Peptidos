@@ -9,6 +9,102 @@
   <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
   <script src="//unpkg.com/alpinejs" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    const aminoAcidWeights = {
+      A: 71.07793,
+      C: 103.1454,
+      D: 115.0873,
+      E: 129.1139,
+      F: 147.1734,
+      G: 57.05138,
+      H: 137.1394,
+      I: 113.1576,
+      K: 128.1724,
+      L: 113.1576,
+      M: 131.1985,
+      N: 114.1028,
+      P: 97.11508,
+      Q: 128.1293,
+      R: 156.1861,
+      S: 87.07733,
+      T: 101.1039,
+      V: 99.13103,
+      W: 186.2095,
+      Y: 163.1728
+    };
+
+    const calculateMolecularWeight = (sequence) => {
+      const N_TERMINUS = 1.00797; // Hydrogen atom at N-terminus
+      const C_TERMINUS = 17.00738; // OH group at C-terminus
+      let weight = N_TERMINUS + C_TERMINUS; // Initial weight with termini
+      for (let i = 0; i < sequence.length; i++) {
+        weight += aminoAcidWeights[sequence[i]];
+      }
+      return weight.toFixed(2);
+    };
+
+  </script>
+
+<script>
+  const aminoAcidPka = {
+    N_terminus: 9.69,
+    C_terminus: 2.34,
+    K: 10.54,
+    R: 12.48,
+    H: 6.04,
+    D: 3.86,
+    E: 4.25,
+    C: 8.33,
+    Y: 10.07
+  };
+  
+  const aminoAcidCounts = (sequence) => {
+    const counts = {
+      N_terminus: 1, // One N-terminus per peptide
+      C_terminus: 1, // One C-terminus per peptide
+      K: 0,
+      R: 0,
+      H: 0,
+      D: 0,
+      E: 0,
+      C: 0,
+      Y: 0
+    };
+    
+    for (let i = 0; i < sequence.length; i++) {
+      if (counts.hasOwnProperty(sequence[i])) {
+        counts[sequence[i]]++;
+      }
+    }
+    return counts;
+  };
+  
+  const calculateNetCharge = (sequence, pH) => {
+    const counts = aminoAcidCounts(sequence);
+    let positiveSum = 0;
+    let negativeSum = 0;
+    
+    // Sum positive contributions
+    positiveSum += counts.N_terminus * (10 ** aminoAcidPka.N_terminus) / (10 ** pH + 10 ** aminoAcidPka.N_terminus);
+    positiveSum += counts.K * (10 ** aminoAcidPka.K) / (10 ** pH + 10 ** aminoAcidPka.K);
+    positiveSum += counts.R * (10 ** aminoAcidPka.R) / (10 ** pH + 10 ** aminoAcidPka.R);
+    positiveSum += counts.H * (10 ** aminoAcidPka.H) / (10 ** pH + 10 ** aminoAcidPka.H);
+    
+    // Sum negative contributions
+    negativeSum += counts.C_terminus * (10 ** pH) / (10 ** pH + 10 ** aminoAcidPka.C_terminus);
+    negativeSum += counts.D * (10 ** pH) / (10 ** pH + 10 ** aminoAcidPka.D);
+    negativeSum += counts.E * (10 ** pH) / (10 ** pH + 10 ** aminoAcidPka.E);
+    negativeSum += counts.C * (10 ** pH) / (10 ** pH + 10 ** aminoAcidPka.C);
+    negativeSum += counts.Y * (10 ** pH) / (10 ** pH + 10 ** aminoAcidPka.Y);
+    
+    return (positiveSum - negativeSum).toFixed(2);
+  };
+  
+  // Ejemplo de uso
+  const sequence = "QGHIFAMPAGVAHWAYNSGNEPLVAVILIDTSNHANQLDK";
+  const pH = 7.0;
+</script>
+
 </head>
 
 <!-- colors -->
@@ -44,19 +140,19 @@
         this.$watch('output', (value) => {
           this.filteredOutput = value.filter((chain) => chain.chain.length >= this.filterSize);
           this.filteredOutputFormatted = this.filteredOutput.map(({chain}) => {
-            return chain + ';' + chain.length
+            return chain + ';' + chain.length + ';' + calculateMolecularWeight(chain) + ';' + calculateNetCharge(chain, 7.0)
           }).join('\n');
         });
         this.$watch('filterSize', (value) => {
           this.filteredOutput = this.output.filter((chain) => chain.chain.length >= value);
           this.filteredOutputFormatted = this.filteredOutput.map(({chain}) => {
-            return chain + ';' + chain.length
+            return chain + ';' + chain.length + ';' + calculateMolecularWeight(chain) + ';' + calculateNetCharge(chain, 7.0)
           }).join('\n');
         });
 
         this.$watch('filteredOutput', (value) => {
           this.filteredOutputFormatted = value.map(({chain}) => {
-            return chain + ';' + chain.length
+            return chain + ';' + chain.length + ';' + calculateMolecularWeight(chain) + ';' + calculateNetCharge(chain, 7.0)
           }).join('\n');
         });
       },
